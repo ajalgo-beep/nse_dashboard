@@ -3,3 +3,7 @@ pandas
 numpy
 altair
 requests
+yahoo_fin
+lxml
+html5lib
+beautifulsoup4
