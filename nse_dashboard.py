@@ -36,12 +36,24 @@ TELEGRAM_CHAT_ID = "your_chat_id"          # 🔑 Replace with your chat id
 # FUNCTIONS
 # ===================
 def get_nse_data(segment, type_="gainers"):
-    session = requests.Session()
-    session.get("https://www.nseindia.com", headers=HEADERS)
-    url = BASE_URL.format(segment, type_)
-    response = session.get(url, headers=HEADERS)
-    data = response.json().get('data', [])
-    return pd.DataFrame(data)
+    try:
+        session = requests.Session()
+        # First request to set cookies
+        session.get("https://www.nseindia.com", headers=HEADERS, timeout=10)
+
+        url = f"https://www.nseindia.com/api/live-analysis-variations?index={segment}&type={type_}"
+        response = session.get(url, headers=HEADERS, timeout=10)
+
+        # Sometimes NSE returns blank → handle safely
+        if response.status_code != 200 or response.text.strip() == "":
+            return pd.DataFrame()
+
+        data = response.json().get('data', [])
+        return pd.DataFrame(data)
+
+    except Exception as e:
+        print(f"⚠️ Error in get_nse_data: {e}")
+        return pd.DataFrame()
 
 def generate_trade_plan(df, direction="long", rr_ratio=2):
     trade_plans = []
