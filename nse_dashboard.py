@@ -33,7 +33,7 @@ from datetime import datetime
 
 # ----------------------
 
-st.set\_page\_config(page\_title="NSE Top Gainers/Losers + Breakouts", layout="wide")
+st.set_page_config(page_title="NSE Top Gainers/Losers + Breakouts", layout="wide")
 
 # Predefined groups
 
