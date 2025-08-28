@@ -1,6 +1,5 @@
 streamlit
-plotly
 pandas
+numpy
+altair
 requests
-nsetools
-python-dotenv
