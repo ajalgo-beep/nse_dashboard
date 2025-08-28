@@ -7,3 +7,4 @@ yahoo_fin
 lxml
 html5lib
 beautifulsoup4
+tabulate
