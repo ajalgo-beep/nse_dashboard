@@ -15,15 +15,21 @@ HEADERS = {
 }
 
 # NSE API fetch with session + cookies
-def get_nse_data(segment, type_="gainers"):
+def get_nse_data(segment, type_="gainers", debug=True):
     try:
         url = f"https://www.nseindia.com/api/live-analysis-variations?index={segment}&type={type_}"
         session = requests.Session()
-        session.get("https://www.nseindia.com", headers=HEADERS, timeout=10)  # initialize cookies
+        # Get homepage once to load cookies
+        session.get("https://www.nseindia.com", headers=HEADERS, timeout=10)  
         response = session.get(url, headers=HEADERS, timeout=10)
 
+        if debug:  # 👀 Print raw text for debugging
+            print("------ NSE RAW RESPONSE ------")
+            print("Status:", response.status_code)
+            print("Headers:", response.headers)
+            print("Text (first 500 chars):", response.text[:500])
+
         if response.status_code != 200 or response.text.strip() == "":
-            print(f"⚠️ NSE API error {response.status_code}")
             return pd.DataFrame()
 
         data = response.json().get("data", [])
