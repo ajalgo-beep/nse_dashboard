@@ -3,8 +3,6 @@ import requests
 import pandas as pd
 import time
 import plotly.express as px
-import plotly.graph_objects as go
-import yfinance as yf
 from datetime import datetime
 
 # NSE Headers
@@ -56,7 +54,15 @@ def generate_trade_plan(df, direction="long", rr_ratio=2):
 st.set_page_config(page_title="📈 NSE Screener with Charts", layout="wide")
 st.title("📊 NSE Gainers, Losers & Breakout Trade Plans")
 
-segment = st.sidebar.selectbox("📌 Select Market Segment", ["SECURITIES IN F&O", "NIFTY 50", "NIFTY NEXT 50"])
+SEGMENTS = {
+    "NIFTY 50": "nifty",
+    "NIFTY NEXT 50": "nifty_next_50",
+    "F&O Securities": "securities_in_fno"
+}
+
+segment_name = st.sidebar.selectbox("📌 Select Market Segment", list(SEGMENTS.keys()))
+segment = SEGMENTS[segment_name]
+
 min_change = st.sidebar.slider("📊 Min % Change", 0, 10, 2, 1)
 rr_ratio = st.sidebar.slider("🎯 Risk:Reward Ratio", 1, 4, 2, 1)
 refresh_time = st.sidebar.slider("⏱ Auto Refresh (mins)", 1, 30, 5, 1)
@@ -108,29 +114,10 @@ try:
             trade_plans_long = generate_trade_plan(gf, "long", rr_ratio)
             st.dataframe(trade_plans_long)
 
-            if not trade_plans_long.empty:
-                # Candlestick example for first gainer
-                symbol = trade_plans_long.iloc[0]['symbol'] + ".NS"
-                data = yf.download(symbol, period="5d", interval="15m")
-                fig = go.Figure(data=[go.Candlestick(x=data.index,
-                                                     open=data['Open'], high=data['High'],
-                                                     low=data['Low'], close=data['Close'])])
-                fig.update_layout(title=f"{symbol} Intraday Candlestick", xaxis_rangeslider_visible=False)
-                st.plotly_chart(fig, use_container_width=True)
-
         with col4:
             st.subheader("📉 Bearish Breakdowns")
             trade_plans_short = generate_trade_plan(lf, "short", rr_ratio)
             st.dataframe(trade_plans_short)
-
-            if not trade_plans_short.empty:
-                symbol = trade_plans_short.iloc[0]['symbol'] + ".NS"
-                data = yf.download(symbol, period="5d", interval="15m")
-                fig = go.Figure(data=[go.Candlestick(x=data.index,
-                                                     open=data['Open'], high=data['High'],
-                                                     low=data['Low'], close=data['Close'])])
-                fig.update_layout(title=f"{symbol} Intraday Candlestick", xaxis_rangeslider_visible=False)
-                st.plotly_chart(fig, use_container_width=True)
 
     else:
         st.warning("⚠️ No data available from NSE right now.")
@@ -140,4 +127,5 @@ try:
 
 except Exception as e:
     st.error(f"⚠️ Error fetching data: {e}")
+
 
