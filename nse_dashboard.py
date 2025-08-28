@@ -63,7 +63,7 @@ st.write(f"⏰ Last Updated: {now}")
 
 # ✅ Always show Top Gainers and Losers
 gainers_df = get_nse_data("gainers")
-losers_df = get_nse_data("losers")
+losers_df = get_nse_data("loosers")
 
 col1, col2 = st.columns(2)
 
