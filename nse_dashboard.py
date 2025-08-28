@@ -15,7 +15,7 @@ HEADERS = {
 def get_nse_data(type_="gainers"):
     """Fetch NSE Top Gainers/Losers from official API"""
     try:
-        url = f"https://www.nseindia.com/api/live-analysis-variations?index=equities&type={type_}"
+        url = f"https://www.nseindia.com/api/live-analysis-variations?index={type_}"
         session = requests.Session()
         # preload cookies
         session.get("https://www.nseindia.com", headers=HEADERS, timeout=10)
