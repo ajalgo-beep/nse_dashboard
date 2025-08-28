@@ -14,10 +14,10 @@ def generate_trade_plan(df, direction="long", rr_ratio=2):
     for _, row in df.iterrows():
         entry = row["ltp"]
         if direction == "long":
-            stop = row["dayLow"]
+            stop = row["lowPrice"]
             target = entry + (entry - stop) * rr_ratio
         else:
-            stop = row["dayHigh"]
+            stop = row["highPrice"]
             target = entry - (stop - entry) * rr_ratio
 
         plans.append({
