@@ -61,13 +61,18 @@ def fetch_group_tickers(group_url):
     try:
         with requests.Session() as s:
             s.headers.update(HEADERS)
+            # Warm-up request to get cookies
+            s.get("https://www.nseindia.com", timeout=10)
             r = s.get(group_url, timeout=10)
             if r.status_code == 200:
                 data = r.json().get("data", [])
-                return [d["symbol"]+".NS" for d in data if "symbol" in d]
-    except Exception:
+                return [d["symbol"] + ".NS" for d in data if "symbol" in d]
+            else:
+                st.error(f"Failed to fetch from NSE API: {r.status_code}")
+                return []
+    except Exception as e:
+        st.error(f"Error fetching group tickers: {e}")
         return []
-    return []
 
 
 def fetch_quote(symbol):
