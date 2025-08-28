@@ -1,6 +1,17 @@
 """
 Streamlit NSE Dashboard: Top Gainers & Losers + Breakout Alerts to Telegram
 Filename: nse_streamlit_dashboard.py
+
+Features:
+- Fetches NSE data using NSEIndia (direct API calls with session & cookies)
+- Fallback to yahoo_fin.stock_info if NSE blocks request
+- Supports ticker groups: NIFTY50, BANKNIFTY, FINNIFTY, and F&O stocks
+- Parallelized data fetching for faster updates
+- Shows Top Gainers and Top Losers as bar charts
+- Sidebar filters: % change, min volume, risk-reward ratio, breakout % threshold, refresh interval
+- Detects breakouts and generates trade plan (entry, stoploss, target)
+- Sends Telegram alerts for breakouts
+- Runs on Streamlit Cloud
 """
 
 import streamlit as st
@@ -11,13 +22,13 @@ import requests
 import os
 import concurrent.futures
 from datetime import datetime
+from yahoo_fin import stock_info as si
 
 # ----------------------
 # Config & Defaults
 # ----------------------
 st.set_page_config(page_title="NSE Top Gainers/Losers + Breakouts", layout="wide")
 
-# Predefined groups
 GROUPS = {
     "NIFTY50": "https://www.nseindia.com/api/equity-stockIndices?index=NIFTY%2050",
     "BANKNIFTY": "https://www.nseindia.com/api/equity-stockIndices?index=NIFTY%20BANK",
@@ -43,25 +54,35 @@ def get_env_or_secret(key):
         return os.environ.get(key)
 
 
-def fetch_group_tickers(group_url, debug=False):
+def fetch_group_tickers(group_url, group_name, debug=False):
+    """Fetch tickers from NSE API, fallback to yahoo_fin if fails"""
     try:
         with requests.Session() as s:
             s.headers.update(HEADERS)
-            # Warm-up request to establish cookies
-            s.get("https://www.nseindia.com", timeout=10)
+            s.get("https://www.nseindia.com", timeout=10)  # warm-up
             r = s.get(group_url, timeout=10)
             if r.status_code == 200:
                 data = r.json().get("data", [])
-                return [d["symbol"]+".NS" for d in data if "symbol" in d]
-            else:
-                if debug:
-                    st.error(f"Failed to fetch from NSE API: {r.status_code}")
-                    st.json(r.text)
-                return []
+                if data:
+                    return [d["symbol"] + ".NS" for d in data if "symbol" in d]
     except Exception as e:
         if debug:
-            st.error(f"Error fetching group tickers: {e}")
-        return []
+            st.warning(f"NSE fetch failed, falling back... Error: {e}")
+
+    # ---- Fallback: yahoo_fin ----
+    try:
+        if group_name == "NIFTY50":
+            return [sym + ".NS" for sym in si.tickers_nifty50()]
+        elif group_name == "BANKNIFTY":
+            return [sym + ".NS" for sym in si.tickers_niftybank()]
+        elif group_name == "FINNIFTY":
+            return [sym + ".NS" for sym in si.tickers_niftyfinsrv()]
+        elif group_name == "FNO":
+            return [sym + ".NS" for sym in si.tickers_fno()]
+    except Exception as e:
+        if debug:
+            st.error(f"Fallback failed for {group_name}: {e}")
+    return []
 
 
 def fetch_quote(symbol):
@@ -166,21 +187,21 @@ with st.sidebar.form("controls"):
     rr = st.slider("Risk-Reward Ratio", 0.5, 10.0, 2.0, step=0.1)
     refresh_interval = st.slider("Auto-refresh interval (mins)", 1, 60, 5)
     telegram_alerts = st.checkbox("Enable Telegram alerts")
-    test_connection = st.form_submit_button("Test NSE Connection")
+    test_connection = st.form_submit_button("Test Connection")
     submit = st.form_submit_button("Apply")
 
 # Connection test button
 if test_connection:
-    st.info("Testing NSE API connection...")
-    tickers = fetch_group_tickers(GROUPS[group_choice], debug=True)
+    st.info("Testing NSE + fallback connection...")
+    tickers = fetch_group_tickers(GROUPS[group_choice], group_choice, debug=True)
     if tickers:
-        st.success(f"✅ NSE API working. Found {len(tickers)} tickers.")
+        st.success(f"✅ Data source working. Found {len(tickers)} tickers.")
     else:
-        st.error("❌ NSE API connection failed. Check logs above.")
+        st.error("❌ No symbols found in NSE or fallback.")
 
-symbols = fetch_group_tickers(GROUPS[group_choice])
+symbols = fetch_group_tickers(GROUPS[group_choice], group_choice)
 if not symbols:
-    st.error("No symbols found for selected group.")
+    st.error("No symbols found for selected group (NSE + fallback failed).")
     st.stop()
 
 with st.spinner("Fetching market data..."):
