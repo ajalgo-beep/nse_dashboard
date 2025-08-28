@@ -1,123 +1,67 @@
 import streamlit as st
 import requests
 import pandas as pd
-from datetime import datetime
-import plotly.express as px
-import requests as req
 import time
+import plotly.express as px
+import plotly.graph_objects as go
+import yfinance as yf
+from datetime import datetime
 
-# ===================
-# NSE CONFIG
-# ===================
-SEGMENTS = {
-    "NIFTY 50": "nifty",
-    "NIFTY Next 50": "juniorNifty",
-    "NIFTY Midcap 50": "niftyMidcap50",
-    "NIFTY Bank": "niftyBank",
-    "F&O Securities": "securities",
-}
-
-BASE_URL = "https://www.nseindia.com/api/live-analysis-variations?index={}&type={}"
-
+# NSE Headers
 HEADERS = {
     "User-Agent": "Mozilla/5.0",
     "Accept-Language": "en-US,en;q=0.9",
     "Accept-Encoding": "gzip, deflate, br"
 }
 
-# ===================
-# TELEGRAM CONFIG
-# ===================
-TELEGRAM_ENABLED = True
-TELEGRAM_BOT_TOKEN = "your_bot_token"      # 🔑 Replace with BotFather token
-TELEGRAM_CHAT_ID = "your_chat_id"          # 🔑 Replace with your chat id
-
-# ===================
-# FUNCTIONS
-# ===================
+# NSE API fetch
 def get_nse_data(segment, type_="gainers"):
     try:
         session = requests.Session()
-        # First request to set cookies
         session.get("https://www.nseindia.com", headers=HEADERS, timeout=10)
-
         url = f"https://www.nseindia.com/api/live-analysis-variations?index={segment}&type={type_}"
         response = session.get(url, headers=HEADERS, timeout=10)
 
-        # Sometimes NSE returns blank → handle safely
         if response.status_code != 200 or response.text.strip() == "":
             return pd.DataFrame()
 
         data = response.json().get('data', [])
         return pd.DataFrame(data)
-
     except Exception as e:
         print(f"⚠️ Error in get_nse_data: {e}")
         return pd.DataFrame()
 
+# Trade Plan Generator
 def generate_trade_plan(df, direction="long", rr_ratio=2):
-    trade_plans = []
+    plans = []
     for _, row in df.iterrows():
         entry = row['lastPrice']
         if direction == "long":
-            stoploss = row['dayLow']
-            risk = entry - stoploss
-            target = entry + (risk * rr_ratio)
+            stop = row['dayLow']
+            target = entry + (entry - stop) * rr_ratio
         else:
-            stoploss = row['dayHigh']
-            risk = stoploss - entry
-            target = entry - (risk * rr_ratio)
+            stop = row['dayHigh']
+            target = entry - (stop - entry) * rr_ratio
 
-        if risk > 0:
-            rr = (abs(target - entry)) / risk
-            trade_plans.append({
-                "symbol": row['symbol'],
-                "entry": round(entry, 2),
-                "stoploss": round(stoploss, 2),
-                "target": round(target, 2),
-                "RRR": round(rr, 2),
-                "pChange": round(row['pChange'], 2),
-                "volume": row.get('totalTradedVolume', 'NA')
-            })
-    return pd.DataFrame(trade_plans)
+        plans.append({
+            "symbol": row['symbol'],
+            "entry": entry,
+            "stoploss": stop,
+            "target": target,
+            "risk_reward": rr_ratio
+        })
+    return pd.DataFrame(plans)
 
-def send_telegram_alert(message):
-    if not TELEGRAM_ENABLED:
-        return
-    try:
-        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-        payload = {"chat_id": TELEGRAM_CHAT_ID, "text": message}
-        req.post(url, data=payload)
-    except Exception as e:
-        st.error(f"⚠️ Telegram Error: {e}")
+# Streamlit UI
+st.set_page_config(page_title="📈 NSE Screener with Charts", layout="wide")
+st.title("📊 NSE Gainers, Losers & Breakout Trade Plans")
 
-def push_alerts(trades, direction):
-    for _, row in trades.iterrows():
-        msg = (f"📢 Breakout Alert ({direction.upper()})\n"
-               f"Symbol: {row['symbol']}\n"
-               f"Entry: {row['entry']}\n"
-               f"SL: {row['stoploss']}\n"
-               f"TGT: {row['target']}\n"
-               f"RRR: {row['RRR']}\n"
-               f"% Change: {row['pChange']}%\n"
-               f"Vol: {row['volume']}")
-        send_telegram_alert(msg)
+segment = st.sidebar.selectbox("📌 Select Market Segment", ["SECURITIES IN F&O", "NIFTY 50", "NIFTY NEXT 50"])
+min_change = st.sidebar.slider("📊 Min % Change", 0, 10, 2, 1)
+rr_ratio = st.sidebar.slider("🎯 Risk:Reward Ratio", 1, 4, 2, 1)
+refresh_time = st.sidebar.slider("⏱ Auto Refresh (mins)", 1, 30, 5, 1)
 
-# ===================
-# STREAMLIT UI
-# ===================
-st.set_page_config(page_title="📈 NSE Breakout Screener + Telegram Alerts", layout="wide")
-st.title("📊 NSE Breakout Screener + Trade Plan + Auto Telegram Alerts")
-
-segment_name = st.sidebar.selectbox("📌 Select Market Segment", list(SEGMENTS.keys()))
-segment = SEGMENTS[segment_name]
-
-min_change = st.sidebar.slider("📊 Min % Change", min_value=0, max_value=10, value=2, step=1)
-min_volume = st.sidebar.number_input("📊 Min Volume", min_value=0, value=100000)
-rr_ratio = st.sidebar.slider("🎯 Risk:Reward Ratio", min_value=1, max_value=4, value=2, step=1)
-refresh_time = st.sidebar.slider("⏱ Auto Refresh (mins)", min_value=1, max_value=30, value=5, step=1)
-
-st.info(f"⚡ Screener will auto-refresh every {refresh_time} minutes and push alerts to Telegram")
+st.info(f"⚡ Screener refreshes every {refresh_time} mins")
 
 try:
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -132,40 +76,68 @@ try:
         gainers_df = gainers_df[keep_cols]
         losers_df = losers_df[keep_cols]
 
-        # Apply filters
-        if 'totalTradedVolume' in gainers_df.columns:
-            gainers_df = gainers_df[(gainers_df['pChange'] >= min_change) & (gainers_df['totalTradedVolume'] >= min_volume)]
-            losers_df = losers_df[(losers_df['pChange'] <= -min_change) & (losers_df['totalTradedVolume'] >= min_volume)]
-        else:
-            gainers_df = gainers_df[(gainers_df['pChange'] >= min_change)]
-            losers_df = losers_df[(losers_df['pChange'] <= -min_change)]
-
         st.write(f"⏰ Last Updated: {now}")
 
         col1, col2 = st.columns(2)
 
-        # ---- Bullish ----
         with col1:
-            st.subheader("📈 Bullish Breakout Plans")
-            trade_plans_long = generate_trade_plan(gainers_df, direction="long", rr_ratio=rr_ratio)
-            st.dataframe(trade_plans_long)
-            if not trade_plans_long.empty:
-                push_alerts(trade_plans_long, "long")
+            st.subheader("🔥 Top Gainers")
+            st.dataframe(gainers_df)
+            fig_g = px.bar(gainers_df.head(10), x="symbol", y="pChange",
+                           title="Top Gainers % Change", color="pChange", color_continuous_scale="Greens")
+            st.plotly_chart(fig_g, use_container_width=True)
 
-        # ---- Bearish ----
         with col2:
-            st.subheader("📉 Bearish Breakdown Plans")
-            trade_plans_short = generate_trade_plan(losers_df, direction="short", rr_ratio=rr_ratio)
+            st.subheader("💀 Top Losers")
+            st.dataframe(losers_df)
+            fig_l = px.bar(losers_df.head(10), x="symbol", y="pChange",
+                           title="Top Losers % Change", color="pChange", color_continuous_scale="Reds")
+            st.plotly_chart(fig_l, use_container_width=True)
+
+        # Breakout Plans
+        st.markdown("---")
+        st.subheader("📊 Breakout Trade Plans")
+
+        gf = gainers_df[gainers_df['pChange'] >= min_change]
+        lf = losers_df[losers_df['pChange'] <= -min_change]
+
+        col3, col4 = st.columns(2)
+
+        with col3:
+            st.subheader("📈 Bullish Breakouts")
+            trade_plans_long = generate_trade_plan(gf, "long", rr_ratio)
+            st.dataframe(trade_plans_long)
+
+            if not trade_plans_long.empty:
+                # Candlestick example for first gainer
+                symbol = trade_plans_long.iloc[0]['symbol'] + ".NS"
+                data = yf.download(symbol, period="5d", interval="15m")
+                fig = go.Figure(data=[go.Candlestick(x=data.index,
+                                                     open=data['Open'], high=data['High'],
+                                                     low=data['Low'], close=data['Close'])])
+                fig.update_layout(title=f"{symbol} Intraday Candlestick", xaxis_rangeslider_visible=False)
+                st.plotly_chart(fig, use_container_width=True)
+
+        with col4:
+            st.subheader("📉 Bearish Breakdowns")
+            trade_plans_short = generate_trade_plan(lf, "short", rr_ratio)
             st.dataframe(trade_plans_short)
+
             if not trade_plans_short.empty:
-                push_alerts(trade_plans_short, "short")
+                symbol = trade_plans_short.iloc[0]['symbol'] + ".NS"
+                data = yf.download(symbol, period="5d", interval="15m")
+                fig = go.Figure(data=[go.Candlestick(x=data.index,
+                                                     open=data['Open'], high=data['High'],
+                                                     low=data['Low'], close=data['Close'])])
+                fig.update_layout(title=f"{symbol} Intraday Candlestick", xaxis_rangeslider_visible=False)
+                st.plotly_chart(fig, use_container_width=True)
 
     else:
-        st.warning("⚠️ No breakout data available right now.")
+        st.warning("⚠️ No data available from NSE right now.")
 
-    # Auto-refresh
     time.sleep(refresh_time * 60)
     st.experimental_rerun()
 
 except Exception as e:
     st.error(f"⚠️ Error fetching data: {e}")
+
