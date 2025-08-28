@@ -5,25 +5,28 @@ import time
 import plotly.express as px
 from datetime import datetime
 
-# NSE Headers
+# NSE headers (mandatory for API access)
 HEADERS = {
-    "User-Agent": "Mozilla/5.0",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Accept-Encoding": "gzip, deflate, br"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36",
+    "Accept": "application/json, text/plain, */*",
+    "Referer": "https://www.nseindia.com/",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive"
 }
 
-# NSE API fetch
+# NSE API fetch with session + cookies
 def get_nse_data(segment, type_="gainers"):
     try:
-        session = requests.Session()
-        session.get("https://www.nseindia.com", headers=HEADERS, timeout=10)
         url = f"https://www.nseindia.com/api/live-analysis-variations?index={segment}&type={type_}"
+        session = requests.Session()
+        session.get("https://www.nseindia.com", headers=HEADERS, timeout=10)  # initialize cookies
         response = session.get(url, headers=HEADERS, timeout=10)
 
         if response.status_code != 200 or response.text.strip() == "":
+            print(f"⚠️ NSE API error {response.status_code}")
             return pd.DataFrame()
 
-        data = response.json().get('data', [])
+        data = response.json().get("data", [])
         return pd.DataFrame(data)
     except Exception as e:
         print(f"⚠️ Error in get_nse_data: {e}")
@@ -33,16 +36,16 @@ def get_nse_data(segment, type_="gainers"):
 def generate_trade_plan(df, direction="long", rr_ratio=2):
     plans = []
     for _, row in df.iterrows():
-        entry = row['lastPrice']
+        entry = row["lastPrice"]
         if direction == "long":
-            stop = row['dayLow']
+            stop = row["dayLow"]
             target = entry + (entry - stop) * rr_ratio
         else:
-            stop = row['dayHigh']
+            stop = row["dayHigh"]
             target = entry - (stop - entry) * rr_ratio
 
         plans.append({
-            "symbol": row['symbol'],
+            "symbol": row["symbol"],
             "entry": entry,
             "stoploss": stop,
             "target": target,
@@ -51,7 +54,7 @@ def generate_trade_plan(df, direction="long", rr_ratio=2):
     return pd.DataFrame(plans)
 
 # Streamlit UI
-st.set_page_config(page_title="📈 NSE Screener with Charts", layout="wide")
+st.set_page_config(page_title="📈 NSE Screener", layout="wide")
 st.title("📊 NSE Gainers, Losers & Breakout Trade Plans")
 
 SEGMENTS = {
@@ -75,9 +78,9 @@ try:
     losers_df = get_nse_data(segment, "losers")
 
     if not gainers_df.empty and not losers_df.empty:
-        keep_cols = ['symbol', 'lastPrice', 'pChange', 'dayHigh', 'dayLow', 'openPrice', 'previousClose']
-        if 'totalTradedVolume' in gainers_df.columns:
-            keep_cols.append('totalTradedVolume')
+        keep_cols = ["symbol", "lastPrice", "pChange", "dayHigh", "dayLow", "openPrice", "previousClose"]
+        if "totalTradedVolume" in gainers_df.columns:
+            keep_cols.append("totalTradedVolume")
 
         gainers_df = gainers_df[keep_cols]
         losers_df = losers_df[keep_cols]
@@ -104,8 +107,8 @@ try:
         st.markdown("---")
         st.subheader("📊 Breakout Trade Plans")
 
-        gf = gainers_df[gainers_df['pChange'] >= min_change]
-        lf = losers_df[losers_df['pChange'] <= -min_change]
+        gf = gainers_df[gainers_df["pChange"] >= min_change]
+        lf = losers_df[losers_df["pChange"] <= -min_change]
 
         col3, col4 = st.columns(2)
 
@@ -120,12 +123,10 @@ try:
             st.dataframe(trade_plans_short)
 
     else:
-        st.warning("⚠️ No data available from NSE right now.")
+        st.warning("⚠️ NSE data not available right now. Try again in a few minutes.")
 
     time.sleep(refresh_time * 60)
     st.experimental_rerun()
 
 except Exception as e:
     st.error(f"⚠️ Error fetching data: {e}")
-
-
