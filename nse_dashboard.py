@@ -56,17 +56,18 @@ try:
 
     with col1:
         st.subheader("🔥 Top Gainers")
-        st.dataframe(gainers_df[["symbol", "ltp", "netPrice", "dayHigh", "dayLow"]])
+        st.dataframe(gainers_df[["symbol", "ltp", "netPrice", "highPrice", "lowPrice"]])
         fig_g = px.bar(gainers_df.head(10), x="symbol", y="netPrice",
-                       title="Top Gainers % Change", color="netPrice", color_continuous_scale="Greens")
+                   title="Top Gainers % Change", color="netPrice", color_continuous_scale="Greens")
         st.plotly_chart(fig_g, use_container_width=True)
 
     with col2:
         st.subheader("💀 Top Losers")
-        st.dataframe(losers_df[["symbol", "ltp", "netPrice", "dayHigh", "dayLow"]])
+        st.dataframe(losers_df[["symbol", "ltp", "netPrice", "highPrice", "lowPrice"]])
         fig_l = px.bar(losers_df.head(10), x="symbol", y="netPrice",
-                       title="Top Losers % Change", color="netPrice", color_continuous_scale="Reds")
+                   title="Top Losers % Change", color="netPrice", color_continuous_scale="Reds")
         st.plotly_chart(fig_l, use_container_width=True)
+
 
     # Breakout Plans
     st.markdown("---")
