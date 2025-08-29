@@ -15,7 +15,7 @@ HEADERS = {
                   "Chrome/118.0.0.0 Safari/537.36"
 }
 def get_nse_gainers_losers():
-    #Condition1 = '( {33489} ( latest close < latest "( (1 candle ago high + 1 candle ago low + 1 candle ago close / 3 ) * 2 - 1 candle ago high)" ) )'
+    #Get condition from ChartInk by copying the Subgroup in screener
     Condition1 = '( {33489} ( latest close > 20 ) ) '
     payload = {'scan_clause': Condition1}
 
@@ -37,27 +37,6 @@ def get_nse_gainers_losers():
             print ('Could not fetch the data')
         return gainers, losers
         
-# def get_nse_gainers_losers():
-#     """Fetch Top Gainers & Losers from NSE (NIFTY 50)"""
-#     try:
-#         url = "https://www.nseindia.com/api/equity-stockIndices?index=NIFTY%2050"
-#         session = requests.Session()
-#         session.get("https://www.nseindia.com", headers=HEADERS, timeout=10)  # preload cookies
-#         response = session.get(url, headers=HEADERS, timeout=10)
-#         response.raise_for_status()
-#         data = response.json()["data"]
-
-#         df = pd.DataFrame(data)
-#         df["pChange"] = df["pChange"].astype(float)
-
-#         gainers = df.sort_values("pChange", ascending=False).head(10)
-#         losers = df.sort_values("pChange", ascending=True).head(10)
-
-#         return gainers, losers
-#     except Exception as e:
-#         st.error(f"⚠️ Error fetching NSE data: {e}")
-#         return pd.DataFrame(), pd.DataFrame()
-
 # def generate_trade_plan(df, direction="long", rr_ratio=2):
 #     """Generate trade plan with Risk:Reward levels"""
 #     plans = []
@@ -90,7 +69,7 @@ st.sidebar.title("Filters & Controls")
 with st.sidebar.form("controls"):
     #group_choice = st.selectbox("Select Stock Group", list(GROUPS.keys()))
     #segment = st.sidebar.selectbox("📌 Select Market Segment", ["SECURITIES IN F&O", "NIFTY 50", "NIFTY NEXT 50"])
-    segment = st.selectbox("📌 Select Market Segment", ["SECURITIES IN F&O", "NIFTY 50", "NIFTY NEXT 50"])    
+    segment = st.selectbox("📌 Select Market Segment", ["nifty 50","nifty and banknifty","futures", "indices", "Banknifty","cash"])    
     pct_change_filter = st.slider("Min % change", 0.0, 20.0, 0.2, step=0.1)
     min_volume = st.number_input("Min volume", min_value=0, value=100000, step=10000)
     breakout_pct = st.slider("Breakout threshold %", 0.0, 10.0, 0.5, step=0.1)
@@ -102,14 +81,8 @@ with st.sidebar.form("controls"):
     telegram_alerts = st.checkbox("Enable Telegram alerts")
     submit = st.form_submit_button("Apply")
 
-# symbols = fetch_group_tickers(GROUPS[group_choice])
-# if not symbols:
-#     st.error("No symbols found for selected group.")
-#     st.stop()
-
 st.info(f"⚡ Screener refreshes every {refresh_time} mins")
 
-#now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 st.write(f"⏰ Last Updated: {now}")
 
@@ -129,12 +102,6 @@ with col1:
             plot_bgcolor='lightblue'    # Sets the background color of the plotting area
         )
         st.plotly_chart(fig_g, width=100,height=100)
-        #st.plotly_chart(fig_g, use_container_width=True)
-        
-        # st.dataframe(gainers_df[["symbol", "lastPrice", "pChange", "dayHigh", "dayLow", "totalTradedValue"]])
-        # fig_g = px.bar(gainers_df, x="symbol", y="pChange",
-        #                title="Top Gainers % Change", color="pChange", color_continuous_scale="Greens")
-        # st.plotly_chart(fig_g, use_container_width=True)
 
 with col2:
     st.subheader("💀 Top 10 Losers (NIFTY 50)")
@@ -147,11 +114,6 @@ with col2:
             plot_bgcolor='lightblue'    # Sets the background color of the plotting area
         )
         st.plotly_chart(fig_l, width=100,height=100)
-        #st.plotly_chart(fig_l, use_container_width=True)
-        # st.dataframe(losers_df[["symbol", "lastPrice", "pChange", "dayHigh", "dayLow", "totalTradedValue"]])
-        # fig_l = px.bar(losers_df, x="symbol", y="pChange",
-        #                title="Top Losers % Change", color="pChange", color_continuous_scale="Reds")
-        # st.plotly_chart(fig_l, use_container_width=True)
 
 # # 📊 Breakout Trade Plans
 # st.markdown("---")
