@@ -83,9 +83,27 @@ def get_nse_gainers_losers():
 st.set_page_config(page_title="📈 NSE Screener", layout="wide")
 st.title("📊 NSE NIFTY 50 Gainers, Losers & Trade Plans")
 
-min_change = st.sidebar.slider("📊 Min % Change", 0, 10, 2, 1)
-rr_ratio = st.sidebar.slider("🎯 Risk:Reward Ratio", 1, 4, 2, 1)
-refresh_time = st.sidebar.slider("⏱ Auto Refresh (mins)", 1, 30, 5, 1)
+# ----------------------
+# Sidebar Controls
+# ----------------------
+st.sidebar.title("Filters & Controls")
+with st.sidebar.form("controls"):
+    group_choice = st.selectbox("Select Stock Group", list(GROUPS.keys()))
+    pct_change_filter = st.slider("Min % change", 0.0, 20.0, 0.2, step=0.1)
+    min_volume = st.number_input("Min volume", min_value=0, value=100000, step=10000)
+    breakout_pct = st.slider("Breakout threshold %", 0.0, 10.0, 0.5, step=0.1)
+    vol_mult = st.slider("Volume multiplier", 0.5, 5.0, 1.5, step=0.1)
+    lookback_days = st.slider("Lookback days", 5, 60, 20, step=1)
+    stoploss_pct = st.slider("Stoploss %", 0.1, 10.0, 2.0, step=0.1)
+    rr_ratio = st.slider("Risk-Reward Ratio", 0.5, 10.0, 2.0, step=0.1)
+    refresh_time = st.slider("Auto-refresh interval (mins)", 1, 60, 5)
+    telegram_alerts = st.checkbox("Enable Telegram alerts")
+    submit = st.form_submit_button("Apply")
+
+# symbols = fetch_group_tickers(GROUPS[group_choice])
+# if not symbols:
+#     st.error("No symbols found for selected group.")
+#     st.stop()
 
 st.info(f"⚡ Screener refreshes every {refresh_time} mins")
 
