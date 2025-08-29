@@ -4,6 +4,7 @@ import requests
 import plotly.express as px
 import time
 from datetime import datetime
+from datetime import date
 from bs4 import BeautifulSoup
 Charting_Link = "https://chartink.com/screener/"
 Charting_url = 'https://chartink.com/screener/process'
