@@ -18,7 +18,8 @@ HEADERS = {
 # ----------------------
 # Streamlit UI
 # ----------------------
-st.set_page_config(page_title="📈 NSE Screener", layout="wide")
+#st.set_page_config(page_title="📈 NSE Screener", layout="wide")
+st.set_page_config(page_title="AJ-Algo NSE Dasboard", page_icon=":rocket:")
 st.title("📊  AJ-Algo NSE Dasboard")
 # ----------------------
 # Sidebar Controls
