@@ -19,7 +19,7 @@ HEADERS = {
 # Streamlit UI
 # ----------------------
 st.set_page_config(page_title="📈 NSE Screener", layout="wide")
-st.title("📊 NSE NIFTY 50 Gainers, Losers & Trade Plans")
+st.title("📊  AJ-Algo NSE Dasboard")
 # ----------------------
 # Sidebar Controls
 # ----------------------
