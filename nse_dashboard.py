@@ -82,10 +82,11 @@ with st.sidebar.form("controls"):
     telegram_alerts = st.checkbox("Enable Telegram alerts")
     submit = st.form_submit_button("Apply")
 
-st.info(f"⚡ Screener refreshes every {refresh_time} mins")
+
 
 #now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 now = datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%d-%m-%Y %H:%M:%S')
+st.info(f"⚡ Screener refreshes every {refresh_time} mins   ⏰ Last Updated: {now}")
 st.write(f"⏰ Last Updated: {now}")
 
 # ✅ Always show Top 10 Gainers and Losers
