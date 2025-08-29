@@ -59,7 +59,8 @@ else:                          timefrm = "daily"
 # ----------------------
 def get_nse_gainers_losers():
     #Get condition from ChartInk by copying the Subgroup in screener
-    Condition1 = '( {'+group+'} ( '+timefrm+' close > 20 ) ) '
+    #Condition1 = '( {'+group+'} ( '+timefrm+' close > 20 ) ) '
+    Condition1 = '( {'+group+'} ( '+timefrm+' ha-open  = '+timefrm+' ha-low  ) )' 
     payload = {'scan_clause': Condition1}
 
     with requests.Session() as s:
