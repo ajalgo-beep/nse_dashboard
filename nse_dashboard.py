@@ -28,6 +28,7 @@ with st.sidebar.form("controls"):
     #group_choice = st.selectbox("Select Stock Group", list(GROUPS.keys()))
     #segment = st.sidebar.selectbox("📌 Select Market Segment", ["SECURITIES IN F&O", "NIFTY 50", "NIFTY NEXT 50"])
     segment = st.selectbox("📌 Select Market Segment", ["NIFTY 50","NIFTY & BANKNIFTY","FUTURES", "INDICES", "BANKNIFTY","EQUITY"])    
+    timeFrame = st.selectbox("Select Market Segment",["5 minute","15 minute","1 hour","Daily","Weekly","Monthly"]
     pct_change_filter = st.slider("Min % change", 0.0, 20.0, 0.2, step=0.1)
     min_volume = st.number_input("Min volume", min_value=0, value=100000, step=10000)
     breakout_pct = st.slider("Breakout threshold %", 0.0, 10.0, 0.5, step=0.1)
@@ -47,10 +48,18 @@ elif   segment == "INDICES":           group = '45603'
 elif   segment == "FUTURES":           group = '33489'
 else:                                  group = 'cash' 
 
+# ---------------------- 
+if timeFrame   == "5 minute":  timefrm = "[0] 5 minute"
+elif timeFrame == "15 minute": timefrm = "[0] 15 minute"
+elif timeFrame == "1 hour":    timefrm = "[0] 1 hour"
+elif timeFrame == "Weekly":    timefrm = "weekly"
+elif timeFrame == "Monthly":   timefrm = "monthly"
+else:                          timefrm = "daily"
+
 # ----------------------
 def get_nse_gainers_losers():
     #Get condition from ChartInk by copying the Subgroup in screener
-    Condition1 = '( {'+group+'} ( daily close > 20 ) ) '
+    Condition1 = '( {'+group+'} ( '+timefrm+' close > 20 ) ) '
     payload = {'scan_clause': Condition1}
 
     with requests.Session() as s:
