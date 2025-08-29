@@ -34,7 +34,6 @@ background-size: cover;
 
 st.markdown(page_bg_img, unsafe_allow_html=True)
 
-set_png_as_page_bg('background.png')
 # ----------------------
 # Sidebar Controls
 # ----------------------
