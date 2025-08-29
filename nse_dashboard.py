@@ -107,7 +107,7 @@ with col1:
             paper_bgcolor='lightgray',  # Sets the background color of the entire figure
             plot_bgcolor='lightblue'    # Sets the background color of the plotting area
         )
-        st.plotly_chart(fig_g, width=300,height=200)
+        st.plotly_chart(fig_g, width=100,height=100)
         #st.plotly_chart(fig_g, use_container_width=True)
         
         # st.dataframe(gainers_df[["symbol", "lastPrice", "pChange", "dayHigh", "dayLow", "totalTradedValue"]])
@@ -125,7 +125,7 @@ with col2:
             paper_bgcolor='lightgray',  # Sets the background color of the entire figure
             plot_bgcolor='lightblue'    # Sets the background color of the plotting area
         )
-        st.plotly_chart(fig_l, width=200,height=200)
+        st.plotly_chart(fig_l, width=100,height=100)
         #st.plotly_chart(fig_l, use_container_width=True)
         # st.dataframe(losers_df[["symbol", "lastPrice", "pChange", "dayHigh", "dayLow", "totalTradedValue"]])
         # fig_l = px.bar(losers_df, x="symbol", y="pChange",
