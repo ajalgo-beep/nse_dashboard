@@ -100,7 +100,7 @@ col1, col2 = st.columns(2)
 with col1:
     st.subheader("🔥 Top 10 Gainers (NIFTY 50)")
     if not gainers_df.empty:
-        st.dataframe(gainers_df[["name", "nsecode", "close", "per_chg", "volume"]])
+        #st.dataframe(gainers_df[["name", "nsecode", "close", "per_chg", "volume"]])
         fig_g = px.bar(gainers_df, x="nsecode", y="per_chg",
                        title="Top Gainers % Change", color="per_chg", color_continuous_scale="Greens")
         st.plotly_chart(fig_g, use_container_width=True)
@@ -113,7 +113,7 @@ with col1:
 with col2:
     st.subheader("💀 Top 10 Losers (NIFTY 50)")
     if not losers_df.empty:
-        st.dataframe(losers_df[["name", "nsecode", "close", "per_chg", "volume"]])
+        #st.dataframe(losers_df[["name", "nsecode", "close", "per_chg", "volume"]])
         fig_l = px.bar(losers_df, x="nsecode", y="per_chg",
                        title="Top Losers % Change", color="per_chg", color_continuous_scale="Reds")
         st.plotly_chart(fig_l, use_container_width=True)
