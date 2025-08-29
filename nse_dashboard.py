@@ -15,15 +15,42 @@ HEADERS = {
                   "AppleWebKit/537.36 (KHTML, like Gecko) "
                   "Chrome/118.0.0.0 Safari/537.36"
 }
+# ----------------------
+# Streamlit UI
+# ----------------------
+st.set_page_config(page_title="📈 NSE Screener", layout="wide")
+st.title("📊 NSE NIFTY 50 Gainers, Losers & Trade Plans")
+# ----------------------
+# Sidebar Controls
+# ----------------------
+st.sidebar.title("Filters & Controls")
+with st.sidebar.form("controls"):
+    #group_choice = st.selectbox("Select Stock Group", list(GROUPS.keys()))
+    #segment = st.sidebar.selectbox("📌 Select Market Segment", ["SECURITIES IN F&O", "NIFTY 50", "NIFTY NEXT 50"])
+    segment = st.selectbox("📌 Select Market Segment", ["nifty 50","nifty and banknifty","futures", "indices", "Banknifty","cash"])    
+    pct_change_filter = st.slider("Min % change", 0.0, 20.0, 0.2, step=0.1)
+    min_volume = st.number_input("Min volume", min_value=0, value=100000, step=10000)
+    breakout_pct = st.slider("Breakout threshold %", 0.0, 10.0, 0.5, step=0.1)
+    vol_mult = st.slider("Volume multiplier", 0.5, 5.0, 1.5, step=0.1)
+    lookback_days = st.slider("Lookback days", 5, 60, 20, step=1)
+    stoploss_pct = st.slider("Stoploss %", 0.1, 10.0, 2.0, step=0.1)
+    rr_ratio = st.slider("Risk-Reward Ratio", 0.5, 10.0, 2.0, step=0.1)
+    refresh_time = st.slider("Auto-refresh interval (mins)", 1, 60, 5)
+    telegram_alerts = st.checkbox("Enable Telegram alerts")
+    submit = st.form_submit_button("Apply")
+    
+# ----------------------    
+match segment:
+    case "NIFTY 50":          group = '33492'
+    case "BANKNIFTY":         group = '136699'
+    case "NIFTY & BANKNIFTY": group = '109630'
+    case "INDICES":           group = '45603'
+    case "FUTURES":           group = '33489'
+    case _:                   group = 'case'
+# ----------------------
 def get_nse_gainers_losers():
     #Get condition from ChartInk by copying the Subgroup in screener
-    match {segment}:
-        case "NIFTY 50":          group = '33492'
-        case "BANKNIFTY":         group = '136699'
-        case "NIFTY & BANKNIFTY": group = '109630'
-        case "INDICES":           group = '45603'
-        case "FUTURES":           group = '33489'
-        case _:                   group = 'case'
+
 
     Condition1 = '( {33489} ( latest close > 20 ) ) '
     payload = {'scan_clause': Condition1}
@@ -67,28 +94,28 @@ def get_nse_gainers_losers():
 #         })
 #     return pd.DataFrame(plans)
 
-# Streamlit UI
-st.set_page_config(page_title="📈 NSE Screener", layout="wide")
-st.title("📊 NSE NIFTY 50 Gainers, Losers & Trade Plans")
+# # Streamlit UI
+# st.set_page_config(page_title="📈 NSE Screener", layout="wide")
+# st.title("📊 NSE NIFTY 50 Gainers, Losers & Trade Plans")
 
-# ----------------------
-# Sidebar Controls
-# ----------------------
-st.sidebar.title("Filters & Controls")
-with st.sidebar.form("controls"):
-    #group_choice = st.selectbox("Select Stock Group", list(GROUPS.keys()))
-    #segment = st.sidebar.selectbox("📌 Select Market Segment", ["SECURITIES IN F&O", "NIFTY 50", "NIFTY NEXT 50"])
-    segment = st.selectbox("📌 Select Market Segment", ["nifty 50","nifty and banknifty","futures", "indices", "Banknifty","cash"])    
-    pct_change_filter = st.slider("Min % change", 0.0, 20.0, 0.2, step=0.1)
-    min_volume = st.number_input("Min volume", min_value=0, value=100000, step=10000)
-    breakout_pct = st.slider("Breakout threshold %", 0.0, 10.0, 0.5, step=0.1)
-    vol_mult = st.slider("Volume multiplier", 0.5, 5.0, 1.5, step=0.1)
-    lookback_days = st.slider("Lookback days", 5, 60, 20, step=1)
-    stoploss_pct = st.slider("Stoploss %", 0.1, 10.0, 2.0, step=0.1)
-    rr_ratio = st.slider("Risk-Reward Ratio", 0.5, 10.0, 2.0, step=0.1)
-    refresh_time = st.slider("Auto-refresh interval (mins)", 1, 60, 5)
-    telegram_alerts = st.checkbox("Enable Telegram alerts")
-    submit = st.form_submit_button("Apply")
+# # ----------------------
+# # Sidebar Controls
+# # ----------------------
+# st.sidebar.title("Filters & Controls")
+# with st.sidebar.form("controls"):
+#     #group_choice = st.selectbox("Select Stock Group", list(GROUPS.keys()))
+#     #segment = st.sidebar.selectbox("📌 Select Market Segment", ["SECURITIES IN F&O", "NIFTY 50", "NIFTY NEXT 50"])
+#     segment = st.selectbox("📌 Select Market Segment", ["nifty 50","nifty and banknifty","futures", "indices", "Banknifty","cash"])    
+#     pct_change_filter = st.slider("Min % change", 0.0, 20.0, 0.2, step=0.1)
+#     min_volume = st.number_input("Min volume", min_value=0, value=100000, step=10000)
+#     breakout_pct = st.slider("Breakout threshold %", 0.0, 10.0, 0.5, step=0.1)
+#     vol_mult = st.slider("Volume multiplier", 0.5, 5.0, 1.5, step=0.1)
+#     lookback_days = st.slider("Lookback days", 5, 60, 20, step=1)
+#     stoploss_pct = st.slider("Stoploss %", 0.1, 10.0, 2.0, step=0.1)
+#     rr_ratio = st.slider("Risk-Reward Ratio", 0.5, 10.0, 2.0, step=0.1)
+#     refresh_time = st.slider("Auto-refresh interval (mins)", 1, 60, 5)
+#     telegram_alerts = st.checkbox("Enable Telegram alerts")
+#     submit = st.form_submit_button("Apply")
 
 now = datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%d-%m-%Y %H:%M:%S')
 info1, info2 = st.columns(2)
@@ -105,19 +132,21 @@ gainers_df, losers_df = get_nse_gainers_losers()
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("🔥 Top 10 Gainers (NIFTY 50)")
+    st.subheader("🔥 Top 10 Gainers ({group})")
+    #st.subheader("🔥 Top 10 Gainers (NIFTY 50)")
     if not gainers_df.empty:
         #st.dataframe(gainers_df[["name", "nsecode", "close", "per_chg", "volume"]])
         fig_g = px.bar(gainers_df, x="nsecode", y="per_chg",
                        title="Top Gainers % Change", color="per_chg", color_continuous_scale="Greens")
         fig_g.update_layout(
-            paper_bgcolor='lightgray',  # Sets the background color of the entire figure
-            plot_bgcolor='lightblue'    # Sets the background color of the plotting area
+            paper_bgcolor   ='lightgray',  # Sets the background color of the entire figure
+            plot_bgcolor    ='lightblue'    # Sets the background color of the plotting area
         )
         st.plotly_chart(fig_g, width=100,height=100)
 
 with col2:
-    st.subheader("💀 Top 10 Losers (NIFTY 50)")
+    st.subheader("💀 Top 10 Losers ({group})")
+    #st.subheader("💀 Top 10 Losers (NIFTY 50)")
     if not losers_df.empty:
         #st.dataframe(losers_df[["name", "nsecode", "close", "per_chg", "volume"]])
         fig_l = px.bar(losers_df, x="nsecode", y="per_chg",
