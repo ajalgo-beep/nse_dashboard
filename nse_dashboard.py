@@ -186,3 +186,5 @@ with col2:
 #     st.subheader("📉 Bearish Breakdowns")
 #     if not lf.empty:
 #         trade_plans_sh
+time.sleep(refresh_time * 60)
+    st.experimental_rerun()
