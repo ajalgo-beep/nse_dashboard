@@ -86,8 +86,8 @@ with st.sidebar.form("controls"):
 
 #now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 now = datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%d-%m-%Y %H:%M:%S')
-st.info(f"⚡ Screener refreshes every {refresh_time} mins   ⏰ Last Updated: {now}")
-st.write(f"⏰ Last Updated: {now}")
+st.info(f"⚡ Screener refreshes every {refresh_time} mins  /t/t/t ⏰ Last Updated: {now}")
+#st.write(f"⏰ Last Updated: {now}")
 
 # ✅ Always show Top 10 Gainers and Losers
 gainers_df, losers_df = get_nse_gainers_losers()
