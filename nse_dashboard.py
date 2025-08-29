@@ -15,8 +15,8 @@ HEADERS = {
                   "Chrome/118.0.0.0 Safari/537.36"
 }
 def get_nse_gainers_losers():
-    Condition = '( {33489} ( latest close < latest "( (1 candle ago high + 1 candle ago low + 1 candle ago close / 3 ) * 2 - 1 candle ago high)" ) )'
-    payload = {'scan_clause': payload}
+    Condition1 = '( {33489} ( latest close < latest "( (1 candle ago high + 1 candle ago low + 1 candle ago close / 3 ) * 2 - 1 candle ago high)" ) )'
+    payload = {'scan_clause': Condition1}
 
     with requests.Session() as s:
         r = s.get(Charting_Link)
