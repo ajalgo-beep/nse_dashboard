@@ -27,7 +27,7 @@ st.sidebar.title("Filters & Controls")
 with st.sidebar.form("controls"):
     #group_choice = st.selectbox("Select Stock Group", list(GROUPS.keys()))
     #segment = st.sidebar.selectbox("📌 Select Market Segment", ["SECURITIES IN F&O", "NIFTY 50", "NIFTY NEXT 50"])
-    segment = st.selectbox("📌 Select Market Segment", ["nifty 50","nifty and banknifty","futures", "indices", "Banknifty","cash"])    
+    segment = st.selectbox("📌 Select Market Segment", ["NIFTY 50","NIFTY & BANKNIFTY","FUTURES", "INDICES", "BANKNIFTY","EQUITY"])    
     pct_change_filter = st.slider("Min % change", 0.0, 20.0, 0.2, step=0.1)
     min_volume = st.number_input("Min volume", min_value=0, value=100000, step=10000)
     breakout_pct = st.slider("Breakout threshold %", 0.0, 10.0, 0.5, step=0.1)
@@ -45,13 +45,11 @@ elif   segment == "BANKNIFTY":         group = '136699'
 elif   segment == "NIFTY & BANKNIFTY": group = '109630'
 elif   segment == "INDICES":           group = '45603'
 elif   segment == "FUTURES":           group = '33489'
-else:                                  group = 'case' 
+else:                                  group = 'cash' 
 
 # ----------------------
 def get_nse_gainers_losers():
     #Get condition from ChartInk by copying the Subgroup in screener
-
-
     Condition1 = '( {33489} ( latest close > 20 ) ) '
     payload = {'scan_clause': Condition1}
 
@@ -132,7 +130,7 @@ gainers_df, losers_df = get_nse_gainers_losers()
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader(f"🔥 Top 10 Gainers ({group})")
+    st.subheader(f"🔥 Top 10 Gainers ({segment})")
     #st.subheader("🔥 Top 10 Gainers (NIFTY 50)")
     if not gainers_df.empty:
         #st.dataframe(gainers_df[["name", "nsecode", "close", "per_chg", "volume"]])
@@ -145,7 +143,7 @@ with col1:
         st.plotly_chart(fig_g, width=100,height=100)
 
 with col2:
-    st.subheader(f"💀 Top 10 Losers ({group})")
+    st.subheader(f"💀 Top 10 Losers ({segment})")
     #st.subheader("💀 Top 10 Losers (NIFTY 50)")
     if not losers_df.empty:
         #st.dataframe(losers_df[["name", "nsecode", "close", "per_chg", "volume"]])
