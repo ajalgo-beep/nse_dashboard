@@ -8,7 +8,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 Charting_Link = "https://chartink.com/screener/"
 Charting_url = 'https://chartink.com/screener/process'
-
+group = 'cash'
 # NSE headers
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -17,6 +17,14 @@ HEADERS = {
 }
 def get_nse_gainers_losers():
     #Get condition from ChartInk by copying the Subgroup in screener
+    match {segment}:
+        case "NIFTY 50":          group = '33492'
+        case "BANKNIFTY":         group = '136699'
+        case "NIFTY & BANKNIFTY": group = '109630'
+        case "INDICES":           group = '45603'
+        case "FUTURES":           group = '33489'
+        case _:                   group = 'case'
+
     Condition1 = '( {33489} ( latest close > 20 ) ) '
     payload = {'scan_clause': Condition1}
 
@@ -82,9 +90,6 @@ with st.sidebar.form("controls"):
     telegram_alerts = st.checkbox("Enable Telegram alerts")
     submit = st.form_submit_button("Apply")
 
-
-
-#now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 now = datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%d-%m-%Y %H:%M:%S')
 info1, info2 = st.columns(2)
 with info1:
