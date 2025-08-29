@@ -78,7 +78,7 @@ def get_nse_gainers_losers():
                 gainers = df.sort_values("per_chg", ascending=False).head(10)
                 gainers1 = gainers.sort_values("per_chg", ascending=True)
                 losers = df.sort_values("per_chg", ascending=True).head(10)
-                losers1 = df.sort_values("per_chg", ascending=False)
+                losers1 = losers.sort_values("per_chg", ascending=False)
         else:
             print ('Could not fetch the data')
         return gainers1, losers1
