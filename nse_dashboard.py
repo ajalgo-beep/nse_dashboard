@@ -86,7 +86,12 @@ with st.sidebar.form("controls"):
 
 #now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 now = datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%d-%m-%Y %H:%M:%S')
-st.info(f"⚡ Screener refreshes every {refresh_time} mins                            ⏰ Last Updated: {now}")
+info1, info2 = st.columns(2)
+with info1:
+    st.info("⚡ Screener refreshes every {refresh_time} mins")
+with info2:
+    st.info("⏰ Last Updated: {now}")
+#st.info(f"⚡ Screener refreshes every {refresh_time} mins                            ⏰ Last Updated: {now}")
 #st.write(f"⏰ Last Updated: {now}")
 
 # ✅ Always show Top 10 Gainers and Losers
