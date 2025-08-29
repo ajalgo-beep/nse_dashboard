@@ -45,7 +45,7 @@ elif   segment == "BANKNIFTY":         group = '136699'
 elif   segment == "NIFTY & BANKNIFTY": group = '109630'
 elif   segment == "INDICES":           group = '45603'
 elif   segment == "FUTURES":           group = '33489'
-else                                   group = 'case' 
+else:                                  group = 'case' 
 
 # ----------------------
 def get_nse_gainers_losers():
