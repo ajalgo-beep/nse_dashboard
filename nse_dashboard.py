@@ -50,7 +50,7 @@ else:                                  group = 'cash'
 # ----------------------
 def get_nse_gainers_losers():
     #Get condition from ChartInk by copying the Subgroup in screener
-    Condition1 = '( {33489} ( latest close > 20 ) ) '
+    Condition1 = '( {'+group+'} ( latest close > 20 ) ) '
     payload = {'scan_clause': Condition1}
 
     with requests.Session() as s:
