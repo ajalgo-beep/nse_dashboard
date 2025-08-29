@@ -109,7 +109,8 @@ with st.sidebar.form("controls"):
 
 st.info(f"⚡ Screener refreshes every {refresh_time} mins")
 
-now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+#now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 st.write(f"⏰ Last Updated: {now}")
 
 # ✅ Always show Top 10 Gainers and Losers
