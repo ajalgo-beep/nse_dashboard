@@ -190,7 +190,7 @@ with col2:
 #---------------------
 # Constructing the message and sending onto telegram group with chatid and token id
 payload = {
-    'chat_id': 'algobeepBot',
+    'chat_id': '967276571',
     #'text': f"""``` Top 5 Gainers in NIFTY50\n{tabulate(nifty50_gain_top5, headers = 'keys', tablefmt = 'pretty')}\n\n\nTop 10 Gainers in FnO Category\n{tabulate(fno_secu_gain_top10, headers = 'keys', tablefmt = 'pretty')}\n\n\nTop 10 Gainers in all securities\n{tabulate(all_secu_gain_top10, headers = 'keys', tablefmt = 'pretty')}```""",
     'text': f"""``` Top 5 Gainers in NIFTTY50```""",
     'parse_mode': 'MarkdownV2'}
