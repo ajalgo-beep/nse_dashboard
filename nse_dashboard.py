@@ -3,8 +3,8 @@ import pandas as pd
 import requests
 import plotly.express as px
 import time
+import pytz
 from datetime import datetime
-from datetime import date
 from bs4 import BeautifulSoup
 Charting_Link = "https://chartink.com/screener/"
 Charting_url = 'https://chartink.com/screener/process'
@@ -85,7 +85,7 @@ with st.sidebar.form("controls"):
 st.info(f"⚡ Screener refreshes every {refresh_time} mins")
 
 #now = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-now = datetime.now()
+now = datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%d-%m-%Y %H:%M:%S')
 st.write(f"⏰ Last Updated: {now}")
 
 # ✅ Always show Top 10 Gainers and Losers
