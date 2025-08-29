@@ -88,9 +88,9 @@ with st.sidebar.form("controls"):
 now = datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%d-%m-%Y %H:%M:%S')
 info1, info2 = st.columns(2)
 with info1:
-    st.info("⚡ Screener refreshes every {refresh_time} mins")
+    st.info(f"⚡ Screener refreshes every {refresh_time} mins")
 with info2:
-    st.info("⏰ Last Updated: {now}")
+    st.info(f"⏰ Last Updated: {now}")
 #st.info(f"⚡ Screener refreshes every {refresh_time} mins                            ⏰ Last Updated: {now}")
 #st.write(f"⏰ Last Updated: {now}")
 
