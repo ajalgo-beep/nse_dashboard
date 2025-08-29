@@ -4,6 +4,7 @@ import requests
 import plotly.express as px
 import time
 import pytz
+import base64
 from datetime import datetime
 from bs4 import BeautifulSoup
 Charting_Link = "https://chartink.com/screener/"
@@ -21,6 +22,19 @@ HEADERS = {
 #st.set_page_config(page_title="📈 NSE Screener", layout="wide")
 st.set_page_config(page_title="AJ-Algo NSE Dasboard", page_icon=":rocket:")
 st.title("📊  AJ-Algo NSE Dasboard")
+
+page_bg_img = '''
+<style>
+body {
+background-image: url("https://images.unsplash.com/photo-1542281286-9e0a16bb7366");
+background-size: cover;
+}
+</style>
+'''
+
+st.markdown(page_bg_img, unsafe_allow_html=True)
+
+set_png_as_page_bg('background.png')
 # ----------------------
 # Sidebar Controls
 # ----------------------
