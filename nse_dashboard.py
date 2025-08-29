@@ -40,13 +40,13 @@ with st.sidebar.form("controls"):
     submit = st.form_submit_button("Apply")
     
 # ----------------------    
-match segment:
-    case "NIFTY 50":          group = '33492'
-    case "BANKNIFTY":         group = '136699'
-    case "NIFTY & BANKNIFTY": group = '109630'
-    case "INDICES":           group = '45603'
-    case "FUTURES":           group = '33489'
-    case _:                   group = 'case'
+if     segment == "NIFTY 50":          group = '33492'
+elif   segment == "BANKNIFTY":         group = '136699'
+elif   segment == "NIFTY & BANKNIFTY": group = '109630'
+elif   segment == "INDICES":           group = '45603'
+elif   segment == "FUTURES":           group = '33489'
+else                                   group = 'case' 
+
 # ----------------------
 def get_nse_gainers_losers():
     #Get condition from ChartInk by copying the Subgroup in screener
@@ -132,7 +132,7 @@ gainers_df, losers_df = get_nse_gainers_losers()
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("🔥 Top 10 Gainers ({group})")
+    st.subheader(f"🔥 Top 10 Gainers ({group})")
     #st.subheader("🔥 Top 10 Gainers (NIFTY 50)")
     if not gainers_df.empty:
         #st.dataframe(gainers_df[["name", "nsecode", "close", "per_chg", "volume"]])
@@ -145,7 +145,7 @@ with col1:
         st.plotly_chart(fig_g, width=100,height=100)
 
 with col2:
-    st.subheader("💀 Top 10 Losers ({group})")
+    st.subheader(f"💀 Top 10 Losers ({group})")
     #st.subheader("💀 Top 10 Losers (NIFTY 50)")
     if not losers_df.empty:
         #st.dataframe(losers_df[["name", "nsecode", "close", "per_chg", "volume"]])
