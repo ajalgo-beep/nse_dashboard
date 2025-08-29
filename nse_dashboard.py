@@ -103,6 +103,10 @@ with col1:
         #st.dataframe(gainers_df[["name", "nsecode", "close", "per_chg", "volume"]])
         fig_g = px.bar(gainers_df, x="nsecode", y="per_chg",
                        title="Top Gainers % Change", color="per_chg", color_continuous_scale="Greens")
+        fig_g.update_layout(
+            paper_bgcolor='black',  # Sets the background color of the entire figure
+            plot_bgcolor='lightblue'    # Sets the background color of the plotting area
+        )
         st.plotly_chart(fig_g, width=300,height=200)
         #st.plotly_chart(fig_g, use_container_width=True)
         
@@ -117,6 +121,10 @@ with col2:
         #st.dataframe(losers_df[["name", "nsecode", "close", "per_chg", "volume"]])
         fig_l = px.bar(losers_df, x="nsecode", y="per_chg",
                        title="Top Losers % Change", color="per_chg", color_continuous_scale="Reds")
+        fig_l.update_layout(
+            paper_bgcolor='black',  # Sets the background color of the entire figure
+            plot_bgcolor='lightblue'    # Sets the background color of the plotting area
+        )
         st.plotly_chart(fig_l, width=200,height=200)
         #st.plotly_chart(fig_l, use_container_width=True)
         # st.dataframe(losers_df[["symbol", "lastPrice", "pChange", "dayHigh", "dayLow", "totalTradedValue"]])
