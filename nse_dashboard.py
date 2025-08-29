@@ -75,11 +75,13 @@ def get_nse_gainers_losers():
         if (r.status_code==200):
             for item in r.json()['data']:
                 df = df._append(item, ignore_index=True)
-                gainers = df.sort_values("per_chg", ascending=True).head(10)
-                losers = df.sort_values("per_chg", ascending=False).head(10)
+                gainers = df.sort_values("per_chg", ascending=False).head(10)
+                gainers1 = gainers.sort_values("per_chg", ascending=True)
+                losers = df.sort_values("per_chg", ascending=True).head(10)
+                losers1 = df.sort_values("per_chg", ascending=False)
         else:
             print ('Could not fetch the data')
-        return gainers, losers
+        return gainers1, losers1
         
 # def generate_trade_plan(df, direction="long", rr_ratio=2):
 #     """Generate trade plan with Risk:Reward levels"""
