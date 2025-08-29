@@ -144,7 +144,7 @@ with col1:
     #st.subheader("🔥 Top 10 Gainers (NIFTY 50)")
     if not gainers_df.empty:
         #st.dataframe(gainers_df[["name", "nsecode", "close", "per_chg", "volume"]])
-        fig_g = px.bar(gainers_df, x="nsecode", y="per_chg",
+        fig_g = px.bar(gainers_df, y="nsecode", x="per_chg",
                        title="Top Gainers % Change", color="per_chg", color_continuous_scale="Greens")
         fig_g.update_layout(
             paper_bgcolor   ='lightgray',  # Sets the background color of the entire figure
@@ -157,7 +157,7 @@ with col2:
     #st.subheader("💀 Top 10 Losers (NIFTY 50)")
     if not losers_df.empty:
         #st.dataframe(losers_df[["name", "nsecode", "close", "per_chg", "volume"]])
-        fig_l = px.bar(losers_df, x="nsecode", y="per_chg",
+        fig_l = px.bar(losers_df, y="nsecode", x="per_chg",
                        title="Top Losers % Change", color="per_chg", color_continuous_scale="Reds")
         fig_l.update_layout(
             paper_bgcolor='lightgray',  # Sets the background color of the entire figure
