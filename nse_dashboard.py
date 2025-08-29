@@ -187,4 +187,4 @@ with col2:
 #     if not lf.empty:
 #         trade_plans_sh
 time.sleep(refresh_time * 60)
-    st.experimental_rerun()
+st.experimental_rerun()
