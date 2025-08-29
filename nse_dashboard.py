@@ -105,9 +105,7 @@ with col1:
                        title="Top Gainers % Change", color="per_chg", color_continuous_scale="Greens")
         fig_g.update_layout(
             paper_bgcolor='lightgray',  # Sets the background color of the entire figure
-            plot_bgcolor='lightblue',    # Sets the background color of the plotting area
-            width=300,
-            height=200
+            plot_bgcolor='lightblue'    # Sets the background color of the plotting area
         )
         st.plotly_chart(fig_g, width=300,height=200)
         #st.plotly_chart(fig_g, use_container_width=True)
@@ -125,9 +123,7 @@ with col2:
                        title="Top Losers % Change", color="per_chg", color_continuous_scale="Reds")
         fig_l.update_layout(
             paper_bgcolor='lightgray',  # Sets the background color of the entire figure
-            plot_bgcolor='lightblue',    # Sets the background color of the plotting area
-            width=300,
-            height=200
+            plot_bgcolor='lightblue'    # Sets the background color of the plotting area
         )
         st.plotly_chart(fig_l, width=200,height=200)
         #st.plotly_chart(fig_l, use_container_width=True)
