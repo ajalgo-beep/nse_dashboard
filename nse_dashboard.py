@@ -192,7 +192,7 @@ with col3:
         "Daily": "https://chartink.com/stocks/nifty.html",           # Daily chart
         "Weekly": "https://chartink.com/stocks/nifty-weekly.html",   # Weekly chart
         "Monthly": "https://chartink.com/stocks/nifty-monthly.html", # Monthly chart
-        "Intraday (5min)": "https://chartink.com/stocks/nifty-5min.html",  # 5min intraday
+        "Intraday (5min)": "https://chartink.com/stocks-new?symbol=NIFTY",  # 5min intraday
         "Intraday (15min)": "https://chartink.com/stocks/nifty-15min.html", # 15min intraday
     }
 
