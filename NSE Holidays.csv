@@ -1,19 +1,15 @@
-﻿"Sr. No,Date,Day,Description"
-"1,26-Jan-25,Sunday,Republic Day"
-"2,26-Feb-25,Wednesday,Mahashivratri"
-"3,14-Mar-25,Friday,Holi"
-"4,31-Mar-25,Monday,Id-Ul-Fitr (Ramadan Eid)"
-"5,06-Apr-25,Sunday,Shri Ram Navami"
-"6,10-Apr-25,Thursday,Shri Mahavir Jayanti"
-"7,14-Apr-25,Monday,Dr. Baba Saheb Ambedkar Jayanti"
-"8,18-Apr-25,Friday,Good Friday"
-"9,01-May-25,Thursday,Maharashtra Day"
-"10,07-Jun-25,Saturday,Bakri Id"
-"11,06-Jul-25,Sunday,Muharram"
-"12,15-Aug-25,Friday,Independence Day / Parsi New Year"
-"13,27-Aug-25,Wednesday,Shri Ganesh Chaturthi"
-"14,02-Oct-25,Thursday,Mahatma Gandhi Jayanti/Dussehra"
-"15,21-Oct-25,Tuesday,Diwali Laxmi Pujan"
-"16,22-Oct-25,Wednesday,Balipratipada"
-"17,05-Nov-25,Wednesday,Prakash Gurpurb Sri Guru Nanak Dev"
-"18,25-Dec-25,Thursday,Christmas"
+Date,Day,Description
+26-02-2025,Wednesday,Mahashivratri
+14-03-2025,Friday,Holi
+31-03-2025,Monday,Id-Ul-Fitr (Ramadan Eid)
+10-04-2025,Thursday,Shri Mahavir Jayanti
+14-04-2025,Monday,Dr. Baba Saheb Ambedkar Jayanti
+18-04-2025,Friday,Good Friday
+01-05-2025,Thursday,Maharashtra Day
+15-08-2025,Friday,Independence Day / Parsi New Year
+27-08-2025,Wednesday,Shri Ganesh Chaturthi
+02-10-2025,Thursday,Mahatma Gandhi Jayanti/Dussehra
+21-10-2025,Tuesday,Diwali Laxmi Pujan
+22-10-2025,Wednesday,Balipratipada
+05-11-2025,Wednesday,Prakash Gurpurb Sri Guru Nanak Dev
+25-12-2025,Thursday,Christmas
