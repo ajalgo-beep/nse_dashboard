@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 import requests
 import plotly.express as px
-import time
+#import time
 import pytz
 import base64
-from datetime import datetime
+from datetime import datetime, time
 from bs4 import BeautifulSoup
 Charting_Link = "https://chartink.com/screener/"
 Charting_url = 'https://chartink.com/screener/process'
