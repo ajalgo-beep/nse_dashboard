@@ -144,7 +144,7 @@ dayToday = days_of_week[day_number]
 if dayToday != "Saturday" and dayToday != "Sunday" and timeNow>=time(9,15,0) and timeNow<=time(15,30,0) :
     nseWorking = "Open"
 else:
-    nseWorking = "Close"
+    nseWorking = "Closed"
 #----------------------
 info1, info2, info3 = st.columns(3)
 with info1:
@@ -170,7 +170,7 @@ with col1:
             paper_bgcolor   ='lightgray',  # Sets the background color of the entire figure
             plot_bgcolor    ='lightblue'    # Sets the background color of the plotting area
         )
-        st.plotly_chart(fig_g, width=100,height=100)
+        st.plotly_chart(fig_g)
 
 with col2:
     st.subheader(f"💀 Top 10 Losers ({segment})")
@@ -183,7 +183,7 @@ with col2:
             paper_bgcolor='lightgray',  # Sets the background color of the entire figure
             plot_bgcolor='lightblue'    # Sets the background color of the plotting area
         )
-        st.plotly_chart(fig_l, width=100,height=100)
+        st.plotly_chart(fig_l)
 
 # # 📊 Breakout Trade Plans
 # st.markdown("---")
