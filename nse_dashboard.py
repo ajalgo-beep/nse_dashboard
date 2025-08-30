@@ -141,7 +141,7 @@ day_number = tim.weekday()
 # Convert the integer to a day name
 days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 dayToday = days_of_week[day_number]
-if (dayToday != "Saturday" or dayToday != "Sunday") and timeNow>=time(9,15,0) and timeNow<=time(15,30,0) :
+if dayToday != "Saturday" and dayToday != "Sunday" and timeNow>=time(9,15,0) and timeNow<=time(15,30,0) :
     nseWorking = "Open"
 else:
     nseWorking = "Close"
