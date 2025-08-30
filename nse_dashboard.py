@@ -195,8 +195,8 @@ with col3:
 with col4:
     st.subheader(f"BANKNIFTY")
     # Embed ChartInk chart for selected timeframe
-    #st.components.v1.iframe("https://chartink.com/stocks-new?symbol=BANKNIFTY", height=600, scrolling=True)
-    st.components.v1.iframe("https://in.tradingview.com/chart/OuHJROwE/", height=600, scrolling=True)
+    st.components.v1.iframe("https://chartink.com/stocks-new?symbol=BANKNIFTY", height=600, scrolling=True)
+    #st.components.v1.iframe("https://in.tradingview.com/chart/OuHJROwE/", height=600, scrolling=True)
 
 # # 📊 Breakout Trade Plans
 # st.markdown("---")
