@@ -197,7 +197,7 @@ with col3:
     }
 
     #choice = st.selectbox("Select Timeframe", list(timeframes.keys()))
-    choice = '5min'
+    choice = 'Intraday (5min)'
     # Embed ChartInk chart for selected timeframe
     st.components.v1.iframe(timeframes[choice], height=600, scrolling=True)
 
