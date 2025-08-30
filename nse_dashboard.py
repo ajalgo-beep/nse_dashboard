@@ -157,7 +157,7 @@ with info3:
 # ✅ Always show Top 10 Gainers and Losers
 gainers_df, losers_df = get_nse_gainers_losers()
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 with col1:
     st.subheader(f"🔥 Top 10 Gainers ({segment})")
@@ -186,6 +186,21 @@ with col2:
             autosize         = True
         )
         st.plotly_chart(fig_l)
+with col3:
+    st.subheader(f"Nifty")
+    timeframes = {
+        "Daily": "https://chartink.com/stocks/nifty.html",           # Daily chart
+        "Weekly": "https://chartink.com/stocks/nifty-weekly.html",   # Weekly chart
+        "Monthly": "https://chartink.com/stocks/nifty-monthly.html", # Monthly chart
+        "Intraday (5min)": "https://chartink.com/stocks/nifty-5min.html",  # 5min intraday
+        "Intraday (15min)": "https://chartink.com/stocks/nifty-15min.html", # 15min intraday
+    }
+
+    #choice = st.selectbox("Select Timeframe", list(timeframes.keys()))
+    choice = '5min'
+    # Embed ChartInk chart for selected timeframe
+    st.components.v1.iframe(timeframes[choice], height=600, scrolling=True)
+
 
 # # 📊 Breakout Trade Plans
 # st.markdown("---")
