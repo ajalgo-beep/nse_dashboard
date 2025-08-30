@@ -191,11 +191,11 @@ col3, col4 = st.columns(2)
 with col3:
     st.subheader(f"Nifty")
     # Embed ChartInk chart for selected timeframe
-    st.components.v1.iframe("https://chartink.com/stocks-new?symbol=NIFTY", height=200, scrolling=True)
+    st.components.v1.iframe("https://chartink.com/stocks-new?symbol=NIFTY", height=600, scrolling=True)
 with col4:
     st.subheader(f"BANKNIFTY")
     # Embed ChartInk chart for selected timeframe
-    st.components.v1.iframe("https://chartink.com/stocks-new?symbol=NIFTY", height=200, scrolling=True)
+    st.components.v1.iframe("https://chartink.com/stocks-new?symbol=NIFTY", height=600, scrolling=True)
 
 # # 📊 Breakout Trade Plans
 # st.markdown("---")
