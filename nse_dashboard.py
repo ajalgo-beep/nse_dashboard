@@ -134,9 +134,10 @@ def get_nse_gainers_losers():
 #Date and Time information
 #----------------------
 now = datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%d-%m-%Y %H:%M:%S')
-timeNow = now.time()
-dateToday = now.date()
-day_number = current_ist_time.weekday()
+tim = datetime.now(pytz.timezone('Asia/Kolkata'))
+timeNow    = tim.time()
+dateToday  = tim.date()
+day_number = tim.weekday()
 # Convert the integer to a day name
 days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 dayToday = days_of_week[day_number]
