@@ -169,8 +169,7 @@ with col1:
         fig_g.update_layout(
             paper_bgcolor   ='lightgray',  # Sets the background color of the entire figure
             plot_bgcolor    ='lightblue' ,  # Sets the background color of the plotting area
-            autosize        = True,
-            automargin      = True
+            autosize        = True
         )
         st.plotly_chart(fig_g)
 
@@ -184,8 +183,7 @@ with col2:
         fig_l.update_layout(
             paper_bgcolor    ='lightgray',  # Sets the background color of the entire figure
             plot_bgcolor     ='lightblue',    # Sets the background color of the plotting area
-            autosize         = True,
-            automargin       = True
+            autosize         = True
         )
         st.plotly_chart(fig_l)
 
