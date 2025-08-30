@@ -168,7 +168,9 @@ with col1:
                        title="Top Gainers % Change", color="per_chg", color_continuous_scale="Greens")
         fig_g.update_layout(
             paper_bgcolor   ='lightgray',  # Sets the background color of the entire figure
-            plot_bgcolor    ='lightblue'    # Sets the background color of the plotting area
+            plot_bgcolor    ='lightblue' ,  # Sets the background color of the plotting area
+            autosize        = True,
+            automargin      = True
         )
         st.plotly_chart(fig_g)
 
@@ -180,8 +182,10 @@ with col2:
         fig_l = px.bar(losers_df, y="nsecode", x="per_chg",
                        title="Top Losers % Change", color="per_chg", color_continuous_scale="Reds")
         fig_l.update_layout(
-            paper_bgcolor='lightgray',  # Sets the background color of the entire figure
-            plot_bgcolor='lightblue'    # Sets the background color of the plotting area
+            paper_bgcolor    ='lightgray',  # Sets the background color of the entire figure
+            plot_bgcolor     ='lightblue',    # Sets the background color of the plotting area
+            autosize         = True,
+            automargin       = True
         )
         st.plotly_chart(fig_l)
 
