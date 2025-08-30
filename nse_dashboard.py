@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests
 import plotly.express as px
-import time
+import time as timer
 import pytz
 import base64
 from datetime import datetime, time
@@ -220,5 +220,5 @@ if telegram_alerts == True:
     requests.post(url,data=payload,verify=False)
 #---------------------
 
-time.sleep(refresh_time * 60)
+timer.sleep(refresh_time * 60)
 st.rerun()
