@@ -130,14 +130,28 @@ def get_nse_gainers_losers():
 #     telegram_alerts = st.checkbox("Enable Telegram alerts")
 #     submit = st.form_submit_button("Apply")
 
+#----------------------
+#Date and Time information
+#----------------------
 now = datetime.now(pytz.timezone('Asia/Kolkata')).strftime('%d-%m-%Y %H:%M:%S')
-info1, info2 = st.columns(2)
+timeNow = now.time()
+dateToday = now.date()
+day_number = current_ist_time.weekday()
+# Convert the integer to a day name
+days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+dayToday = days_of_week[day_number]
+if (dayToday != "Saturday" or dayToday != "Sunday") and timeNow>=time(9,15,0) and timeNow<=time(15,30,0) :
+    nseWorking = "Open"
+else:
+    nseWorking = "Close"
+#----------------------
+info1, info2, info3 = st.columns(3)
 with info1:
     st.info(f"⚡ Screener refreshes every {refresh_time} mins")
 with info2:
     st.info(f"⏰ Last Updated: {now}")
-#st.info(f"⚡ Screener refreshes every {refresh_time} mins                            ⏰ Last Updated: {now}")
-#st.write(f"⏰ Last Updated: {now}")
+with info3:
+    st.info(f"NSE is {nseWorking}")
 
 # ✅ Always show Top 10 Gainers and Losers
 gainers_df, losers_df = get_nse_gainers_losers()
